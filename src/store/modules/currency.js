@@ -1,13 +1,16 @@
 import {
   getCurrencyList,
-  saveCurrency
+  saveCurrency,
+  deleteCurrency
 } from '@/api/currency'
 
 const order = {
   state: {
     currencyList: null,
-    pageNum: 0,
-    pageSize: 20,
+    pageNum: 1,
+    pageSize: 10,
+    total: 0,
+    pages: 1,
   },
   mutations: {
     setCurrencyList(state, payload) {
@@ -15,10 +18,18 @@ const order = {
     },
     setPageParams(state, {
       pageNum,
-      pageSize
+      pageSize,
+      total,
+      pages,
     }) {
       state.pageNum = pageNum
       state.pageSize = pageSize
+      state.total = total
+      state.pages = pages
+    },
+
+    setCurrentPage(state, currentPage) {
+      state.pageNum = currentPage
     }
   },
   actions: {
@@ -33,25 +44,27 @@ const order = {
       })
       const {
         dataList = [],
-          pageNum,
-          pageSize
       } = result || {}
       commit('setCurrencyList', dataList)
-      commit('setPageParams', {
-        pageNum,
-        pageSize
-      })
+      commit('setPageParams', result)
     },
+    saveCurrency({
+      dispatch
+    }, payload) {
+      return saveCurrency(payload)
+        .then(() => {
+          dispatch('getCurrencyList')
+        })
+    },
+    deleteCurrency({
+      dispatch
+    }, payload) {
+      return deleteCurrency(payload)
+        .then(() => {
+          dispatch('getCurrencyList')
+        })
+    }
   },
-
-  saveCurrency({
-    dispatch
-  }, payload) {
-    return saveCurrency(payload).then(() => {
-      dispatch('getCurrencyList')
-    })
-
-  }
 }
 
 

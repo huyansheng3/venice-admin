@@ -15,3 +15,38 @@ export function saveCurrency(data) {
     data: data
   })
 }
+
+export function deleteCurrency(params) {
+  return request({
+    url: '/swftConfig/deleteCurrConfig',
+    method: 'get',
+    params
+  })
+}
+
+
+export function queryEntrustRate(params) {
+  return request({
+    url: '/swftConfig/queryEntrustRate',
+    method: 'get',
+    params
+  })
+}
+
+export function queryInterestRate(params) {
+  return request({
+    url: '/swftConfig/queryInterestRate',
+    method: 'get',
+    params
+  })
+}
+
+// POST /swftConfig/saveRateConfig
+
+export function saveRateConfig(data) {
+  return request({
+    url: '/swftConfig/saveRateConfig',
+    method: 'post',
+    data
+  })
+}

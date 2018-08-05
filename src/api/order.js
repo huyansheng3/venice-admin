@@ -1,12 +1,14 @@
 import request from '@/utils/request'
 
-export function getOrderList(params) {
+// POST /tradeOrder/queryApproveListByCondition
+export function queryApproveListByCondition(data) {
   return request({
-    url: '/system/GetOrderList',
+    url: '/tradeOrder/queryApproveListByCondition',
     method: 'post',
-    data: params
+    data: data
   })
 }
+
 export function getOrder(params) {
   return request({
     url: '/system/GetOrder',

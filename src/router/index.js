@@ -34,20 +34,25 @@ export const constantRouterMap = [
     component: _import('404'),
     hidden: true
   },
+  // {
+  //   path: '',
+  //   component: Layout,
+  //   redirect: '/dashboard',
+  //   name: 'dashboard',
+  //   children: [{
+  //     path: 'dashboard',
+  //     name: '首页',
+  //     meta: {
+  //       title: '首页',
+  //       icon: 'home'
+  //     },
+  //     component: _import('dashboard/index')
+  //   }]
+  // },
+
   {
     path: '',
-    component: Layout,
-    redirect: '/dashboard',
-    name: 'dashboard',
-    children: [{
-      path: 'dashboard',
-      name: '首页',
-      meta: {
-        title: '首页',
-        icon: 'home'
-      },
-      component: _import('dashboard/index')
-    }]
+    redirect: '/order/orderList',
   },
   {
     path: '/order',
@@ -63,7 +68,7 @@ export const constantRouterMap = [
       component: _import('order/orderList'),
       meta: {
         title: '订单信息',
-        icon: 'table'
+        icon: 'order'
       }
     }]
   },
@@ -73,7 +78,7 @@ export const constantRouterMap = [
     name: 'config',
     meta: {
       title: '配置项',
-      icon: 'config'
+      icon: 'sttings'
     },
     children: [{
         path: 'currList',
@@ -81,7 +86,7 @@ export const constantRouterMap = [
         component: _import('config/currList'),
         meta: {
           title: '支持币种配置',
-          icon: 'table'
+          icon: 'currency'
         }
       },
       {
@@ -90,7 +95,7 @@ export const constantRouterMap = [
         component: _import('config/rate'),
         meta: {
           title: '费率配置',
-          icon: 'table'
+          icon: 'ratio'
         }
       }
     ]

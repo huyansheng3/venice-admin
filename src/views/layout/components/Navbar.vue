@@ -2,7 +2,7 @@
   <el-menu class="navbar" mode="horizontal">
     <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
     <breadcrumb></breadcrumb>
-    <el-dropdown class="avatar-container" trigger="click">
+    <!-- <el-dropdown class="avatar-container" trigger="click">
       <div class="avatar-wrapper">
         <img class="user-avatar" :src="userData.photo_url">
         <i class="el-icon-caret-bottom"></i>
@@ -22,7 +22,7 @@
           <span @click="logout" style="display:block;">退出登录</span>
         </el-dropdown-item>
       </el-dropdown-menu>
-    </el-dropdown>
+    </el-dropdown> -->
   </el-menu>
 </template>
 
@@ -34,13 +34,10 @@ import Hamburger from '@/components/Hamburger'
 export default {
   components: {
     Breadcrumb,
-    Hamburger
+    Hamburger,
   },
   computed: {
-    ...mapGetters([
-      'sidebar',
-      'userData'
-    ])
+    ...mapGetters(['sidebar', 'userData']),
   },
   methods: {
     toggleSideBar() {
@@ -50,8 +47,8 @@ export default {
       this.$store.dispatch('LogOut').then(() => {
         location.reload() // 为了重新实例化vue-router对象 避免bug
       })
-    }
-  }
+    },
+  },
 }
 </script>
 
