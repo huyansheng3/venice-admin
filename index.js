@@ -1,13 +1,13 @@
 var express = require('express');
 var compression = require('compression');
-var connectHistoryApiFallback = require('connect-history-api-fallback');
+// var connectHistoryApiFallback = require('connect-history-api-fallback');
 
 var port = process.env.PORT || process.env.LEANCLOUD_APP_PORT;
 
 var app = express();
 
 app.use(compression());
-app.use(connectHistoryApiFallback());
+// app.use(connectHistoryApiFallback());
 
 app.use('/', express.static('./dist'));
 
