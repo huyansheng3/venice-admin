@@ -1,13 +1,10 @@
 <!-- orderList -->
 <style lang="scss" scoped>
-  .orderList-container {
-    padding: 10px;
-  }
-
-
-
-
+.orderList-container {
+  padding: 10px;
+}
 </style>
+
 <template>
   <div class="orderList-container" v-loading.fullscreen.lock="fullscreenLoading">
     <el-table highlight-current-row header-align="center" align="center" :data="tableData" border style="width: 100%">
@@ -37,71 +34,60 @@
 </template>
 
 <script>
-  import {
-    parseTime
-  } from '@/utils';
-  import img_404 from '@/assets/404_images/image404.png';
-  import {
-    mapGetters
-  } from 'vuex';
-  export default {
-    data() {
-      return {
-        fullscreenLoading: false,
-        img_404,
-        tableData: [],
-        dataParams: {
-          pageIndex: 1,
-          pageSize: 100,
-        }
-      };
-    },
-
-    watch: {},
-
-    components: {},
-
-    computed: {
-      ...mapGetters([
-        'orderListData'
-      ])
-    },
-
-    methods: {
-      async updatedData() {
-        let Data = await this.$store.dispatch('GetOrderList', this.dataParams);
-        return this.setData(Data);
+import { parseTime } from '@/utils'
+import img_404 from '@/assets/404_images/image404.png'
+import { mapGetters } from 'vuex'
+export default {
+  data() {
+    return {
+      fullscreenLoading: false,
+      img_404,
+      tableData: [],
+      dataParams: {
+        pageIndex: 1,
+        pageSize: 100,
       },
-      async initData() {
-        this.fullscreenLoading = true;
-        if (!this.orderListData) return this.updatedData();
-        this.setData(this.orderListData);
-      },
-      setData(res) {
-        this.tableData = [];
-        res.Data.map(i => {
-          this.tableData.push({
-            Id: i._id,
-            OrdertNo: i.orderInfo.OrdertNo || '-',
-            total_fee: i.orderInfo.total_fee || 0,
-            createTime: parseTime(i.orderInfo.createTime, '{y}-{m}-{d}'),
-            cancel_status: i.orderInfo.cancel_status,
-            confirm_status: i.orderInfo.confirm_status,
-            finish_status: i.orderInfo.finish_status,
-            pay_status: i.orderInfo.pay_status,
-          })
-        })
-        this.fullscreenLoading = false;
-      }
-    },
-
-    mounted: function () {
-      this.initData();
     }
-  }
+  },
 
+  watch: {},
+
+  components: {},
+
+  computed: {
+    ...mapGetters(['orderListData']),
+  },
+
+  methods: {
+    async updatedData() {
+      let Data = await this.$store.dispatch('GetOrderList', this.dataParams)
+      return this.setData(Data)
+    },
+    async initData() {
+      if (!this.orderListData) return this.updatedData()
+      this.setData(this.orderListData)
+    },
+    setData(res) {
+      this.tableData = []
+      res.Data.map(i => {
+        this.tableData.push({
+          Id: i._id,
+          OrdertNo: i.orderInfo.OrdertNo || '-',
+          total_fee: i.orderInfo.total_fee || 0,
+          createTime: parseTime(i.orderInfo.createTime, '{y}-{m}-{d}'),
+          cancel_status: i.orderInfo.cancel_status,
+          confirm_status: i.orderInfo.confirm_status,
+          finish_status: i.orderInfo.finish_status,
+          pay_status: i.orderInfo.pay_status,
+        })
+      })
+    },
+  },
+
+  mounted: function() {
+    this.initData()
+  },
+}
 </script>
 <style lang="scss" scoped>
-
-
 </style>

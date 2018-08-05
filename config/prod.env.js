@@ -1,5 +1,5 @@
 'use strict'
 module.exports = {
   NODE_ENV: '"production"',
-  BASE_API: '"https://awei.fun:3032"',
+  BASE_API: '"http://47.92.26.19:9999/venice-swift"',
 }

@@ -9,6 +9,7 @@ import goods from './modules/goods'
 import cms from './modules/cms'
 import shop from './modules/shop'
 import order from './modules/order'
+import currency from './modules/currency'
 
 Vue.use(Vuex)
 
@@ -20,7 +21,8 @@ const store = new Vuex.Store({
     goods,
     cms,
     shop,
-    order
+    order,
+    currency
   },
   getters
 })
