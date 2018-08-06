@@ -63,14 +63,24 @@ export const constantRouterMap = [
       icon: 'order'
     },
     children: [{
-      path: 'orderList',
-      name: 'orderList',
-      component: _import('order/orderList'),
-      meta: {
-        title: '订单信息',
-        icon: 'order'
+        path: 'orderList',
+        name: 'orderList',
+        component: _import('order/orderList'),
+        meta: {
+          title: '订单信息',
+          icon: 'order'
+        }
+      },
+      {
+        path: 'applying-orderList',
+        name: 'applying-orderList',
+        component: _import('order/applying-orderList'),
+        meta: {
+          title: '待审核订单',
+          icon: 'edit'
+        }
       }
-    }]
+    ]
   },
   {
     path: '/config',

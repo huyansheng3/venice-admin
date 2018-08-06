@@ -9,10 +9,30 @@ export function queryApproveListByCondition(data) {
   })
 }
 
-export function getOrder(params) {
+export function getOrder(data) {
   return request({
     url: '/system/GetOrder',
     method: 'post',
-    data: params
+    data: data
+  })
+}
+
+// POST /tradeOrder/approveAgree
+
+export function approveAgree(data) {
+  return request({
+    url: '/tradeOrder/approveAgree',
+    method: 'post',
+    data: data
+  })
+}
+
+// POST /tradeOrder/approveReject
+
+export function approveReject(data) {
+  return request({
+    url: '/tradeOrder/approveReject',
+    method: 'post',
+    data: data
   })
 }

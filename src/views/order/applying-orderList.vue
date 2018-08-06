@@ -14,16 +14,6 @@
   <div class="orderList-container">
 
     <el-form ref="form" :inline="true" :model="searchForm" size="small">
-      <el-form-item label="订单状态">
-        <el-select v-model="searchForm.status" placeholder="请选择订单状态">
-            <el-option
-              v-for="(value, key) in statusMap"
-              :key="key"
-              :label="value"
-              :value="key">
-            </el-option>
-        </el-select>
-      </el-form-item>
       <el-form-item label="用户姓名">
         <el-input v-model="searchForm.userNo" ></el-input>
       </el-form-item>
@@ -154,11 +144,19 @@
         </el-row>
 
         <el-row>
-          <p>备注信息：{{order.remark}}</p>
+          <p>备注信息：
+            <el-input
+              type="textarea"
+              :rows="2"
+              placeholder="请输入备注"
+              v-model="order.remark">
+            </el-input>
+          </p>
         </el-row>
 
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="dialogVisible=false" size="mini">确 定</el-button>
+          <el-button type="danger" @click="handleReject" size="mini">审核拒绝</el-button>
+          <el-button type="success" @click="handleApprove" size="mini">审核通过</el-button>
         </div>
       </el-dialog>
 
@@ -168,7 +166,12 @@
 
 <script>
 import { parseTime } from '@/utils'
-import { queryApproveListByCondition, getOrder } from '@/api/order'
+import {
+  queryApproveListByCondition,
+  getOrder,
+  approveAgree,
+  approveReject,
+} from '@/api/order'
 import { mapGetters } from 'vuex'
 import moment from 'moment'
 
@@ -208,6 +211,7 @@ export const statusMap = {
   COMPLETED: '已完成',
   LIQUIDATED: '已平仓',
   OVERDUED: '已逾期',
+  FAIL: '放款失败',
 }
 
 export default {
@@ -237,6 +241,7 @@ export default {
       return {
         pageNum: this.page.pageNum,
         pageSize: this.page.pageSize,
+        status: 'APPLYING',
         ...this.searchForm,
         startApplyDate: this.searchForm.startApplyDate
           ? moment(this.searchForm.startApplyDate).format('YYYY-MM-DD HH:mm:ss')
@@ -258,6 +263,7 @@ export default {
       this.orderList = dataList.map(item => {
         return {
           ...item,
+
           deadlineDate: item.deadlineDate
             ? moment(item.deadlineDate).format('YYYY-MM-DD HH:mm:ss')
             : null,
@@ -289,6 +295,26 @@ export default {
     checkDetail(order) {
       this.order = order
       this.dialogVisible = true
+    },
+    handleReject() {
+      approveReject(this.order).then(data => {
+        this.$message({
+          message: '审核拒绝成功',
+          type: 'success',
+        })
+        this.dialogVisible = false
+        this.queryApproveListByCondition()
+      })
+    },
+    handleApprove() {
+      approveAgree(this.order).then(data => {
+        this.$message({
+          message: '审核通过成功',
+          type: 'success',
+        })
+        this.dialogVisible = false
+        this.queryApproveListByCondition()
+      })
     },
   },
   mounted() {
