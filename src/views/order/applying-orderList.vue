@@ -53,19 +53,19 @@
       </el-table-column>
       <el-table-column  prop="pledgeCurr" label="质押币种">
       </el-table-column>
-      <el-table-column  prop="pledgeNum" label="质押数量">
+      <el-table-column  prop="pledgeNum" label="质押数量(个)">
       </el-table-column>
 
       <el-table-column  prop="borrowCurr" label="借贷币种">
       </el-table-column>
-      <el-table-column  prop="borrowNum" label="借贷数量">
+      <el-table-column  prop="borrowNum" label="借贷数量(个)">
       </el-table-column>
-      <el-table-column  prop="payableAmount" label="等价USDT数量">
+      <el-table-column  prop="payableAmount" label="放款等价USDT数量(个)">
       </el-table-column>
-      <el-table-column  prop="loanNum" label="实际到账">
+      <el-table-column  prop="loanNum" label="实际到账(个)">
       </el-table-column>
 
-      <el-table-column  prop="borrowDays" label="借贷期限">
+      <el-table-column  prop="borrowDays" label="借贷期限(天)">
       </el-table-column>
 
       <el-table-column  prop="applyDate" label="申请时间">
@@ -139,8 +139,12 @@
             利息：{{order.payableAmount * order.interestRate}} USDT
           </el-col>
           <el-col :span="8">
-            到期应还：{{order.payableAmount}} USDT
+            到期应还：{{order.payableAmount}} USDT (或等价 ETH)
           </el-col>
+        </el-row>
+
+        <el-row>
+          实时质押率：{{order.realTimeMortgageRate}}%
         </el-row>
 
         <el-row>
@@ -166,14 +170,20 @@
 
 <script>
 import { parseTime } from '@/utils'
-import {
-  queryApproveListByCondition,
-  getOrder,
-  approveAgree,
-  approveReject,
-} from '@/api/order'
+import { queryApproveListByCondition, getOrder, approveAgree, approveReject } from '@/api/order'
 import { mapGetters } from 'vuex'
 import moment from 'moment'
+
+export const statusMap = {
+  APPROVE_REJECT: '审核拒绝',
+  LOANING: '放款中',
+  APPLYING: '审核中',
+  REPAYING: '待还款',
+  COMPLETED: '已完成',
+  LIQUIDATED: '已平仓',
+  OVERDUED: '已逾期',
+  FAIL: '放款失败',
+}
 
 const order = {
   createUser: '',
@@ -202,16 +212,6 @@ const order = {
   payableAmount: 0,
   remark: '',
   realTimeMortgageRate: 0,
-}
-
-export const statusMap = {
-  LOANING: '放款中',
-  APPLYING: '审核中',
-  REPAYING: '待还款',
-  COMPLETED: '已完成',
-  LIQUIDATED: '已平仓',
-  OVERDUED: '已逾期',
-  FAIL: '放款失败',
 }
 
 export default {
@@ -243,12 +243,8 @@ export default {
         pageSize: this.page.pageSize,
         status: 'APPLYING',
         ...this.searchForm,
-        startApplyDate: this.searchForm.startApplyDate
-          ? moment(this.searchForm.startApplyDate).format('YYYY-MM-DD HH:mm:ss')
-          : undefined,
-        endApplyDate: this.searchForm.endApplyDate
-          ? moment(this.searchForm.endApplyDate).format('YYYY-MM-DD HH:mm:ss')
-          : undefined,
+        startApplyDate: this.searchForm.startApplyDate ? moment(this.searchForm.startApplyDate).format('YYYY-MM-DD HH:mm:ss') : undefined,
+        endApplyDate: this.searchForm.endApplyDate ? moment(this.searchForm.endApplyDate).format('YYYY-MM-DD HH:mm:ss') : undefined,
       }
     },
   },
@@ -256,23 +252,15 @@ export default {
   methods: {
     async queryApproveListByCondition() {
       this.isSearch = true
-      const { dataList, ...page } = await queryApproveListByCondition(
-        this.searchCondition
-      )
+      const { dataList, ...page } = await queryApproveListByCondition(this.searchCondition)
       this.isSearch = false
       this.orderList = dataList.map(item => {
         return {
           ...item,
 
-          deadlineDate: item.deadlineDate
-            ? moment(item.deadlineDate).format('YYYY-MM-DD HH:mm:ss')
-            : null,
-          loanDate: item.loanDate
-            ? moment(item.loanDate).format('YYYY-MM-DD HH:mm:ss')
-            : null,
-          applyDate: item.applyDate
-            ? moment(item.applyDate).format('YYYY-MM-DD HH:mm:ss')
-            : null,
+          deadlineDate: item.deadlineDate ? moment(item.deadlineDate).format('YYYY-MM-DD HH:mm:ss') : null,
+          loanDate: item.loanDate ? moment(item.loanDate).format('YYYY-MM-DD HH:mm:ss') : null,
+          applyDate: item.applyDate ? moment(item.applyDate).format('YYYY-MM-DD HH:mm:ss') : null,
         }
       })
       this.page = page

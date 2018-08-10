@@ -1,7 +1,8 @@
 import {
   getCurrencyList,
   saveCurrency,
-  deleteCurrency
+  deleteCurrency,
+  queryCurrList
 } from '@/api/currency'
 
 const order = {
@@ -11,6 +12,7 @@ const order = {
     pageSize: 10,
     total: 0,
     pages: 1,
+    availableCurrList: []
   },
   mutations: {
     setCurrencyList(state, payload) {
@@ -30,6 +32,9 @@ const order = {
 
     setCurrentPage(state, currentPage) {
       state.pageNum = currentPage
+    },
+    setAvailableCurrList(state, payload) {
+      state.availableCurrList = payload
     }
   },
   actions: {
@@ -63,6 +68,12 @@ const order = {
         .then(() => {
           dispatch('getCurrencyList')
         })
+    },
+    async queryAvailableCurrList({
+      commit
+    }, payload) {
+      const result = await queryCurrList(payload)
+      commit('setAvailableCurrList', result)
     }
   },
 }

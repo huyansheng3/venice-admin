@@ -18,12 +18,12 @@ import Layout from '../views/layout/Layout'
     icon: 'svg-name'             the icon show in the sidebar,
   }
 **/
-export const constantRouterMap = [
-  // {
-  //   path: '/login',
-  //   component: _import('login/index'),
-  //   hidden: true
-  // },
+
+export const constantRouterMap = [{
+    path: '/login',
+    component: _import('login/index'),
+    hidden: true
+  },
   // {
   //   path: '/addAdmin',
   //   component: _import('senior/addAdmin'),

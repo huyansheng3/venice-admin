@@ -45,7 +45,9 @@
     <el-dialog title="新增币种" width="30%" :visible.sync="dialogFormVisible">
       <el-form :model="currency">
         <el-form-item label="币种" >
-          <el-input v-model="currency.curr" auto-complete="off"></el-input>
+          <el-select v-model="currency.curr">
+            <el-option v-for="item in availableCurrList" :key="item" :label="item" :value="item"></el-option>
+          </el-select>
         </el-form-item>
 
         <el-form-item label="质押率">
@@ -90,12 +92,14 @@ export default {
       pageSize: state => state.currency.pageSize,
       total: state => state.currency.total,
       pages: state => state.currency.pages,
+      availableCurrList: state => state.currency.availableCurrList,
     }),
   },
 
   methods: {
     initData() {
       this.$store.dispatch('getCurrencyList')
+      this.$store.dispatch('queryAvailableCurrList')
     },
     handleAddClick() {
       this.dialogFormVisible = true

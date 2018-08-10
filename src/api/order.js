@@ -9,6 +9,17 @@ export function queryApproveListByCondition(data) {
   })
 }
 
+// POST /tradeOrder/queryListByCondition
+export function queryListByCondition(data) {
+  return request({
+    url: '/tradeOrder/queryListByCondition',
+    method: 'post',
+    data: data
+  })
+}
+
+
+
 export function getOrder(data) {
   return request({
     url: '/system/GetOrder',

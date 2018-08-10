@@ -50,3 +50,13 @@ export function saveRateConfig(data) {
     data
   })
 }
+
+// GET /swftConfig/queryCurrList
+
+export function queryCurrList(params) {
+  return request({
+    url: '/swftConfig/queryCurrList',
+    method: 'get',
+    params
+  })
+}

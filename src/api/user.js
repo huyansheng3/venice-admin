@@ -1,10 +1,12 @@
 import request from '@/utils/request'
 
-export function getUserList(params) {
+// POST /swftApi/loginApp
+
+
+export function loginApp(data) {
   return request({
-    url: '/system/GetUserList',
+    url: '/swftApi/loginApp',
     method: 'post',
-    data: params
+    data
   })
 }
-

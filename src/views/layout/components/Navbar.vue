@@ -2,9 +2,9 @@
   <el-menu class="navbar" mode="horizontal">
     <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
     <breadcrumb></breadcrumb>
-    <!-- <el-dropdown class="avatar-container" trigger="click">
+    <el-dropdown class="avatar-container" trigger="click">
       <div class="avatar-wrapper">
-        <img class="user-avatar" :src="userData.photo_url">
+        <img class="user-avatar" src="src/assets/404_images/image404.png">
         <i class="el-icon-caret-bottom"></i>
       </div>
       <el-dropdown-menu class="user-dropdown" slot="dropdown">
@@ -13,16 +13,11 @@
             首页
           </el-dropdown-item>
         </router-link>
-        <router-link class="inlineBlock" to="/">
-          <el-dropdown-item divided style="text-align:center;">
-            个人信息
-          </el-dropdown-item>
-        </router-link>
         <el-dropdown-item divided>
           <span @click="logout" style="display:block;">退出登录</span>
         </el-dropdown-item>
       </el-dropdown-menu>
-    </el-dropdown> -->
+    </el-dropdown>
   </el-menu>
 </template>
 
@@ -44,9 +39,8 @@ export default {
       this.$store.dispatch('ToggleSideBar')
     },
     logout() {
-      this.$store.dispatch('LogOut').then(() => {
-        location.reload() // 为了重新实例化vue-router对象 避免bug
-      })
+      this.$store.dispatch('logout')
+      this.$router.push({ path: '/login' })
     },
   },
 }

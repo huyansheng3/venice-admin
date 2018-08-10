@@ -1,37 +1,61 @@
 import {
-  getUserList
+  loginApp
 } from '@/api/user'
-import {
-  getToken,
-  setToken,
-  removeToken
-} from '@/utils/auth'
+import Cookies from 'js-cookie'
 
-const admin = {
+const defaultInfo = {
+  "equipmentNo": "123",
+  "sourceType": "IOS",
+  // "userNo": "1@wuyongshi.top",
+  // "userPassword": "123456"
+}
+
+let userInfo = {}
+try {
+  userInfo = Cookies.get('user') && JSON.parse(Cookies.get('user'));
+} catch (e) {
+  console.error(e);
+}
+
+const user = {
   state: {
-    userListData: null
+    sessionUuid: '',
+    userNo: '',
+    ...userInfo
+  },
+  getters: {
+    isAuth(state) {
+      return Boolean(state.sessionUuid) && Boolean(state.userNo)
+    }
   },
   mutations: {
-    SET_USER_LIST_DATA: (state, userListData) => {
-      state.userListData = userListData
+    setUserInfo(state, payload) {
+      state = { ...state,
+        ...payload
+      }
+    },
+    resetUserInfo(state) {
+      state.sessionUuid = ''
+      state.userNo = ''
     }
   },
   actions: {
-    GetUserList({ // 获取用户信息列表
-      commit,
-      state
-    }, formData) {
-      return new Promise((resolve, reject) => {
-        getUserList(formData).then(response => {
-          commit('SET_USER_LIST_DATA', response)
-          resolve(response)
-        }).catch(error => {
-          reject(error)
-        })
+    async login({
+      commit
+    }, payload) {
+      const result = await loginApp({ ...defaultInfo,
+        ...payload
       })
+      Cookies.set('user', result);
+      commit('setUserInfo', result)
     },
-
+    logout({
+      commit
+    }) {
+      Cookies.remove('user');
+      commit('resetUserInfo')
+    }
   }
 }
 
-export default admin
+export default user

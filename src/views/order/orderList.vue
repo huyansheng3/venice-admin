@@ -63,19 +63,19 @@
       </el-table-column>
       <el-table-column  prop="pledgeCurr" label="质押币种">
       </el-table-column>
-      <el-table-column  prop="pledgeNum" label="质押数量">
+      <el-table-column  prop="pledgeNum" label="质押数量(个)">
       </el-table-column>
 
       <el-table-column  prop="borrowCurr" label="借贷币种">
       </el-table-column>
-      <el-table-column  prop="borrowNum" label="借贷数量">
+      <el-table-column  prop="borrowNum" label="借贷数量(个)">
       </el-table-column>
-      <el-table-column  prop="payableAmount" label="等价USDT数量">
+      <el-table-column  prop="payableAmount" label="放款等价USDT数量(个)">
       </el-table-column>
-      <el-table-column  prop="loanNum" label="实际到账">
+      <el-table-column  prop="loanNum" label="实际到账(个)">
       </el-table-column>
 
-      <el-table-column  prop="borrowDays" label="借贷期限">
+      <el-table-column  prop="borrowDays" label="借贷期限(天)">
       </el-table-column>
 
       <el-table-column  prop="applyDate" label="申请时间">
@@ -168,7 +168,7 @@
 
 <script>
 import { parseTime } from '@/utils'
-import { queryApproveListByCondition, getOrder } from '@/api/order'
+import { queryListByCondition, getOrder } from '@/api/order'
 import { mapGetters } from 'vuex'
 import moment from 'moment'
 
@@ -201,13 +201,17 @@ const order = {
   realTimeMortgageRate: 0,
 }
 
+// 订单状态(暂定状态),审核中:APPLYING,审核拒绝:APPROVE_REJECT,放款中:LOANING,待还款:REPAYING,已平仓:LIQUIDATED,已完成:COMPLETED,已逾期:OVERDUED,放款失败:FAIL ,
+
 export const statusMap = {
+  APPROVE_REJECT: '审核拒绝',
   LOANING: '放款中',
   APPLYING: '审核中',
   REPAYING: '待还款',
   COMPLETED: '已完成',
   LIQUIDATED: '已平仓',
   OVERDUED: '已逾期',
+  FAIL: '放款失败',
 }
 
 export default {
@@ -238,35 +242,23 @@ export default {
         pageNum: this.page.pageNum,
         pageSize: this.page.pageSize,
         ...this.searchForm,
-        startApplyDate: this.searchForm.startApplyDate
-          ? moment(this.searchForm.startApplyDate).format('YYYY-MM-DD HH:mm:ss')
-          : undefined,
-        endApplyDate: this.searchForm.endApplyDate
-          ? moment(this.searchForm.endApplyDate).format('YYYY-MM-DD HH:mm:ss')
-          : undefined,
+        startApplyDate: this.searchForm.startApplyDate ? moment(this.searchForm.startApplyDate).format('YYYY-MM-DD HH:mm:ss') : undefined,
+        endApplyDate: this.searchForm.endApplyDate ? moment(this.searchForm.endApplyDate).format('YYYY-MM-DD HH:mm:ss') : undefined,
       }
     },
   },
 
   methods: {
-    async queryApproveListByCondition() {
+    async queryListByCondition() {
       this.isSearch = true
-      const { dataList, ...page } = await queryApproveListByCondition(
-        this.searchCondition
-      )
+      const { dataList, ...page } = await queryListByCondition(this.searchCondition)
       this.isSearch = false
       this.orderList = dataList.map(item => {
         return {
           ...item,
-          deadlineDate: item.deadlineDate
-            ? moment(item.deadlineDate).format('YYYY-MM-DD HH:mm:ss')
-            : null,
-          loanDate: item.loanDate
-            ? moment(item.loanDate).format('YYYY-MM-DD HH:mm:ss')
-            : null,
-          applyDate: item.applyDate
-            ? moment(item.applyDate).format('YYYY-MM-DD HH:mm:ss')
-            : null,
+          deadlineDate: item.deadlineDate ? moment(item.deadlineDate).format('YYYY-MM-DD HH:mm:ss') : null,
+          loanDate: item.loanDate ? moment(item.loanDate).format('YYYY-MM-DD HH:mm:ss') : null,
+          applyDate: item.applyDate ? moment(item.applyDate).format('YYYY-MM-DD HH:mm:ss') : null,
         }
       })
       this.page = page
@@ -276,15 +268,15 @@ export default {
     },
 
     onSearch() {
-      this.queryApproveListByCondition()
+      this.queryListByCondition()
     },
     onReset() {
       this.searchForm = {}
-      this.queryApproveListByCondition()
+      this.queryListByCondition()
     },
     handleCurrentChange(curr) {
       this.page.pageNum = curr
-      this.queryApproveListByCondition()
+      this.queryListByCondition()
     },
     checkDetail(order) {
       this.order = order
@@ -292,7 +284,7 @@ export default {
     },
   },
   mounted() {
-    this.queryApproveListByCondition()
+    this.queryListByCondition()
   },
 }
 </script>
