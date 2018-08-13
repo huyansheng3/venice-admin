@@ -14,11 +14,12 @@ const service = axios.create({
   timeout: 15000, // 请求超时时间
 })
 
-const user = store.state.user
-
 // request拦截器
 service.interceptors.request.use(config => {
-  config.data = {...config.data, ...user};
+  const user = store.state.user
+  config.data = { ...config.data,
+    ...user
+  };
   return config
 }, error => {
   // Do something with request error
