@@ -17,6 +17,5 @@ const getters = {
   orderListData: state => state.order.orderListData,
   /* 订单 */
 
-
 }
 export default getters
