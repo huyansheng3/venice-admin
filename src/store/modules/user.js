@@ -2,6 +2,7 @@ import {
   loginApp
 } from '@/api/user'
 import Cookies from 'js-cookie'
+import router from '@/router'
 
 const defaultInfo = {
   "equipmentNo": "123",
@@ -19,8 +20,8 @@ try {
 
 const user = {
   state: {
+    ...defaultInfo,
     sessionUuid: '',
-    userNo: '',
     ...userInfo
   },
   getters: {
@@ -54,6 +55,9 @@ const user = {
     }) {
       Cookies.remove('user');
       commit('resetUserInfo')
+      router.push({
+        name: 'login'
+      })
     }
   }
 }

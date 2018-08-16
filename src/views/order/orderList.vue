@@ -169,7 +169,7 @@
 <script>
 import { parseTime } from '@/utils'
 import { queryListByCondition, getOrder } from '@/api/order'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 import moment from 'moment'
 
 const order = {
@@ -218,7 +218,6 @@ export default {
   data() {
     return {
       orderList: null,
-      order: {},
       page: {
         pageNum: 1,
         pageSize: 10,
@@ -237,6 +236,9 @@ export default {
   components: {},
 
   computed: {
+    ...mapState({
+      order: state => state.order.order,
+    }),
     searchCondition() {
       return {
         pageNum: this.page.pageNum,
@@ -279,7 +281,7 @@ export default {
       this.queryListByCondition()
     },
     checkDetail(order) {
-      this.order = order
+      this.$store.dispatch('queryOrder', { id: order.id })
       this.dialogVisible = true
     },
   },

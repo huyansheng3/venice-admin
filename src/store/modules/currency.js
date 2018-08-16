@@ -2,7 +2,7 @@ import {
   getCurrencyList,
   saveCurrency,
   deleteCurrency,
-  queryCurrList
+  queryCurrList,
 } from '@/api/currency'
 
 const order = {
@@ -12,7 +12,7 @@ const order = {
     pageSize: 10,
     total: 0,
     pages: 1,
-    availableCurrList: []
+    availableCurrList: [],
   },
   mutations: {
     setCurrencyList(state, payload) {
@@ -35,7 +35,8 @@ const order = {
     },
     setAvailableCurrList(state, payload) {
       state.availableCurrList = payload
-    }
+    },
+
   },
   actions: {
     async getCurrencyList({ // 获取订单列表
@@ -74,7 +75,8 @@ const order = {
     }, payload) {
       const result = await queryCurrList(payload)
       commit('setAvailableCurrList', result)
-    }
+    },
+
   },
 }
 

@@ -46,7 +46,7 @@
       <el-form :model="currency">
         <el-form-item label="币种" >
           <el-select v-model="currency.curr">
-            <el-option v-for="item in availableCurrList" :key="item" :label="item" :value="item"></el-option>
+            <el-option v-for="item in availableCurrList" :key="item.id" :label="item.curr" :value="item.curr"></el-option>
           </el-select>
         </el-form-item>
 

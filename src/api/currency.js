@@ -51,12 +51,12 @@ export function saveRateConfig(data) {
   })
 }
 
-// GET /swftConfig/queryCurrList
+// POST /swftApi/queryAllCurrList 
 
-export function queryCurrList(params) {
+export function queryCurrList(data) {
   return request({
-    url: '/swftConfig/queryCurrList',
-    method: 'get',
-    params
+    url: '/swftApi/queryAllCurrList',
+    method: 'post',
+    data
   })
 }

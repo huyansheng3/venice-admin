@@ -1,6 +1,6 @@
 import {
   queryApproveListByCondition,
-  getOrder
+  queryOrder
 } from '@/api/order'
 
 
@@ -12,10 +12,13 @@ const order = {
       "pageSize": 10,
       "pages": 0,
       "total": 0
-    }
+    },
+    order: {},
   },
   mutations: {
-
+    setOrder(state, payload) {
+      state.order = payload
+    }
   },
   actions: {
     async queryApproveListByCondition({
@@ -25,6 +28,12 @@ const order = {
       await queryApproveListByCondition({
         data: {}
       })
+    },
+    async queryOrder({
+      commit
+    }, payload) {
+      const result = await queryOrder(payload)
+      commit('setOrder', result)
     }
   }
 }

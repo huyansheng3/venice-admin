@@ -149,12 +149,16 @@
 
         <el-row>
           <p>备注信息：
-            <el-input
-              type="textarea"
-              :rows="2"
-              placeholder="请输入备注"
-              v-model="order.remark">
-            </el-input>
+            <el-form :model="order" :rules="rules" ref="form" >
+              <el-form-item  prop="remark">
+                <el-input
+                  type="textarea"
+                  :rows="2"
+                  placeholder="请输入备注"
+                  v-model="order.remark">
+                </el-input>
+              </el-form-item>
+            </el-form>
           </p>
         </el-row>
 
@@ -171,7 +175,7 @@
 <script>
 import { parseTime } from '@/utils'
 import { queryApproveListByCondition, getOrder, approveAgree, approveReject } from '@/api/order'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 import moment from 'moment'
 
 export const statusMap = {
@@ -218,7 +222,6 @@ export default {
   data() {
     return {
       orderList: null,
-      order: {},
       page: {
         pageNum: 1,
         pageSize: 10,
@@ -229,6 +232,9 @@ export default {
       statusMap: statusMap,
       isSearch: false,
       dialogVisible: false,
+      rules: {
+        remark: [{ required: true, message: '请输入备注' }, { min: 0, max: 100, message: '长度在 0 到 100 个字符' }],
+      },
     }
   },
 
@@ -237,6 +243,9 @@ export default {
   components: {},
 
   computed: {
+    ...mapState({
+      order: state => state.order.order,
+    }),
     searchCondition() {
       return {
         pageNum: this.page.pageNum,
@@ -281,27 +290,42 @@ export default {
       this.queryApproveListByCondition()
     },
     checkDetail(order) {
-      this.order = order
+      this.$store.dispatch('queryOrder', { id: order.id })
       this.dialogVisible = true
     },
-    handleReject() {
-      approveReject(this.order).then(data => {
-        this.$message({
-          message: '审核拒绝成功',
-          type: 'success',
+    validate() {
+      return new Promise((resolve, reject) => {
+        this.$refs.form.validate(valid => {
+          if (valid) {
+            resolve()
+          } else {
+            reject()
+          }
         })
-        this.dialogVisible = false
-        this.queryApproveListByCondition()
+      })
+    },
+    handleReject() {
+      this.validate().then(() => {
+        approveReject(this.order).then(data => {
+          this.$message({
+            message: '审核拒绝成功',
+            type: 'success',
+          })
+          this.dialogVisible = false
+          this.queryApproveListByCondition()
+        })
       })
     },
     handleApprove() {
-      approveAgree(this.order).then(data => {
-        this.$message({
-          message: '审核通过成功',
-          type: 'success',
+      this.validate().then(() => {
+        approveAgree(this.order).then(data => {
+          this.$message({
+            message: '审核通过成功',
+            type: 'success',
+          })
+          this.dialogVisible = false
+          this.queryApproveListByCondition()
         })
-        this.dialogVisible = false
-        this.queryApproveListByCondition()
       })
     },
   },

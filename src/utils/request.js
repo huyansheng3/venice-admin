@@ -36,6 +36,8 @@ service.interceptors.response.use(
     if (response.status === 200) {
       if (response.data.status === 'SUCCESS') {
         return response.data.data
+      } else if (response.data.retCode === '951') {
+        store.dispatch('logout')
       } else {
         Message({
           message: response.data.retMsg,

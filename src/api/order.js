@@ -47,3 +47,14 @@ export function approveReject(data) {
     data: data
   })
 }
+
+
+// GET /tradeOrder/queryOrder
+
+export function queryOrder(params) {
+  return request({
+    url: '/tradeOrder/queryOrder',
+    method: 'get',
+    params
+  })
+}
