@@ -70,7 +70,7 @@
       </el-table-column>
       <el-table-column  prop="borrowNum" label="借贷数量(个)">
       </el-table-column>
-      <el-table-column  prop="payableAmount" label="放款等价USDT数量(个)">
+      <el-table-column  prop="loanBorrowValue" label="放款等价USDT数量(个)">
       </el-table-column>
       <el-table-column  prop="loanNum" label="实际到账(个)">
       </el-table-column>
@@ -128,7 +128,7 @@
             借贷数量：{{order.borrowNum + order.borrowCurr}}
           </el-col>
           <el-col :span="8">
-            等价USDT：{{order.payableAmount}}
+            等价USDT：{{order.loanBorrowValue || 0}}
           </el-col>
         </el-row>
 
